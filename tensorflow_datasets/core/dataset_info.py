@@ -247,6 +247,26 @@ class DatasetInfo(object):
     self.as_proto.download_checksums.update(checksums)
 
   @property
+  def builder_type(self):
+    """Return the base class of the builder.
+
+    Different Builders may have slightly different behavior.
+
+    Returns:
+      builder_type: `str`, the builder type to use
+    """
+    from tensorflow_datasets.core import dataset_builder   # pylint: disable=g-import-not-at-top
+
+    for cls in [
+        dataset_builder.BeamBasedBuilder,
+        dataset_builder.GeneratorBasedBuilder,
+        dataset_builder.FileBasedBuilder,
+        dataset_builder.DatasetBuilder,
+    ]:
+      if isinstance(self.builder, cls):
+        return cls.__name__
+
+  @property
   def initialized(self):
     """Whether DatasetInfo has been fully initialized."""
     return self._fully_initialized

@@ -52,7 +52,9 @@ class DownloadConfig(object):
                manual_dir=None,
                download_mode=None,
                compute_stats=None,
-               max_examples_per_split=None):
+               max_examples_per_split=None,
+               beam_runner=None,
+               beam_options=None):
     """Constructs a `DownloadConfig`.
 
     Args:
@@ -68,6 +70,10 @@ class DownloadConfig(object):
         statistics over the generated data. Defaults to `AUTO`.
       max_examples_per_split: `int`, optional max number of examples to write
         into each split.
+      beam_runner: Runner to pass to `beam.Pipeline`, only used for datasets
+        based on Beam for the generation.
+      beam_options: `PipelineOptions` to pass to `beam.Pipeline`, only used for
+        datasets based on Beam for the generation.
     """
     self.extract_dir = extract_dir
     self.manual_dir = manual_dir
@@ -76,6 +82,8 @@ class DownloadConfig(object):
     self.compute_stats = util.ComputeStatsMode(
         compute_stats or util.ComputeStatsMode.AUTO)
     self.max_examples_per_split = max_examples_per_split
+    self.beam_runner = beam_runner
+    self.beam_options = beam_options
 
 
 class DownloadManager(object):
